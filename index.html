@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDQ-4 — Психологический тест</title>
+
+  <!-- Системные шрифты (apple-like) -->
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="brand">
+          <div class="logo">PDQ-4</div>
+          <div class="tag">Диагностика выраженности черт личности</div>
+        </div>
+        <nav class="role-nav">
+          <button class="role-btn" id="btn-user" onclick="selectRole('user')">Я — участник</button>
+          <button class="role-btn ghost" id="btn-admin" onclick="selectRole('admin')">Я — администратор</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Пользовательский вход -->
+    <section class="card hidden" id="user-login">
+      <h2>Данные участника</h2>
+      <div class="form-row">
+        <label>Город
+          <select id="citySelect" onchange="onCityChange()">
+            <option value="">— Выберите город —</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Группа
+          <select id="groupSelect">
+            <option value="">— Сначала выберите город —</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-actions">
+        <button onclick="startTest()">Начать тест</button>
+        <button class="link" onclick="backToHome()">Отмена</button>
+      </div>
+    </section>
+
+    <!-- Админский вход -->
+    <section class="card hidden" id="admin-login">
+      <h2>Вход администратора</h2>
+      <div class="form-row">
+        <label>Пароль
+          <input type="password" id="adminPass" placeholder="Введите пароль администратора">
+        </label>
+      </div>
+      <div class="form-actions">
+        <button onclick="checkAdminPassword()">Войти</button>
+        <button class="link" onclick="backToHome()">Отмена</button>
+      </div>
+      <div class="hint">Пароль администратора выдаётся организатором.</div>
+    </section>
+
+    <!-- Тест -->
+    <section class="card hidden" id="test-screen">
+      <div class="test-header">
+        <div id="progressLabel">Вопрос 1 / 1</div>
+        <div id="participantLabel"></div>
+      </div>
+      <h3 id="question-text">Вопрос</h3>
+      <form id="answers-form" class="answers"></form>
+
+      <div class="test-actions">
+        <button id="prevBtn" onclick="prevQuestion()" class="ghost">Назад</button>
+        <button id="nextBtn" onclick="nextQuestion()">Далее</button>
+      </div>
+    </section>
+
+    <!-- Результат -->
+    <section class="card hidden" id="result-screen">
+      <h2>Результат — PDQ-4</h2>
+      <canvas id="radarChart" width="400" height="400"></canvas>
+      <div id="interpretation" class="interpretation"></div>
+      <div class="form-actions">
+        <button onclick="downloadResult()">Скачать результат (CSV)</button>
+        <button onclick="restart()">Готово</button>
+      </div>
+    </section>
+
+    <!-- Админ панель -->
+    <section class="card hidden" id="admin-screen">
+      <h2>Панель администратора</h2>
+      <div class="form-row">
+        <label>Фильтр по городу
+          <select id="adminCityFilter" onchange="renderAdminStats()">
+            <option value="">Все города</option>
+          </select>
+        </label>
+        <label>Фильтр по группе
+          <select id="adminGroupFilter" onchange="renderAdminStats()">
+            <option value="">Все группы</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="admin-output"></div>
+
+      <div class="form-actions">
+        <button onclick="exportAllResults()">Скачать все (CSV)</button>
+        <button class="link" onclick="logoutAdmin()">Выйти</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <small>PDQ-4 — Демонстрационная версия</small>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
