@@ -1,0 +1,41 @@
+<canvas id="resultsChart"></canvas>
+<script type="module">
+import { calculateResults } from './js/calculateResults.js';
+import scales from './data/scales.json';
+import Chart from 'chart.js/auto';
+
+// Пример данных
+const userAnswers = {
+  11: true, 24: false, 6: true, 19: true, 99: true,
+  100: true, 108: true, 110: true, 33: true, 46: true
+};
+
+const results = calculateResults(userAnswers);
+
+const labels = Object.keys(results);
+const data = Object.values(results);
+
+new Chart(document.getElementById('resultsChart'), {
+  type: 'radar',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Ваш профиль PDQ-4',
+      data,
+      fill: true,
+      borderWidth: 2
+    }]
+  },
+  options: {
+    scales: {
+      r: {
+        angleLines: { color: '#ccc' },
+        grid: { color: '#ddd' },
+        suggestedMin: 0,
+        suggestedMax: 8
+      }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+</script>
