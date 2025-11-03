@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Психологический тест</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Психологический тест</h1>
+
+    <!-- Экран выбора роли -->
+    <section id="role-screen">
+      <button onclick="selectRole('user')">Я — участник</button>
+      <button onclick="selectRole('admin')">Я — администратор</button>
+    </section>
+
+    <!-- Экран входа участника -->
+    <section id="user-login" class="hidden">
+      <h2>Введите данные</h2>
+      <label>Город:
+        <input type="text" id="city" placeholder="Например: Москва" />
+      </label>
+      <label>Номер группы:
+        <input type="text" id="group" placeholder="Например: 3" />
+      </label>
+      <button onclick="startTest()">Начать тест</button>
+    </section>
+
+    <!-- Экран теста -->
+    <section id="test-screen" class="hidden">
+      <h2 id="question-text"></h2>
+      <form id="answers-form"></form>
+      <button onclick="nextQuestion()">Далее</button>
+    </section>
+
+    <!-- Экран результатов -->
+    <section id="result-screen" class="hidden">
+      <h2>Ваши результаты</h2>
+      <canvas id="radarChart" width="400" height="400"></canvas>
+      <button onclick="restart()">Пройти снова</button>
+    </section>
+
+    <!-- Экран администратора -->
+    <section id="admin-screen" class="hidden">
+      <h2>Статистика</h2>
+      <button onclick="showStats()">Показать сохранённые результаты</button>
+      <pre id="stats-output"></pre>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
