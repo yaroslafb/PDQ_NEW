@@ -1,41 +1,56 @@
-<canvas id="resultsChart"></canvas>
-<script type="module">
-import { calculateResults } from './js/calculateResults.js';
-import scales from './data/scales.json';
-import Chart from 'chart.js/auto';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Результаты PDQ-4</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <main class="container">
+    <h1>Ваш профиль PDQ-4</h1>
+    <canvas id="resultsChart" width="400" height="400"></canvas>
+    <button class="button" onclick="window.location.href='index.html'">На главную</button>
+  </main>
 
-// Пример данных
-const userAnswers = {
-  11: true, 24: false, 6: true, 19: true, 99: true,
-  100: true, 108: true, 110: true, 33: true, 46: true
-};
+  <script type="module">
+    const saved = localStorage.getItem('pdqResultsTemp');
+    if (!saved) {
+      alert('Нет данных для отображения результатов');
+      window.location.href = 'index.html';
+    }
+    const results = JSON.parse(saved);
 
-const results = calculateResults(userAnswers);
+    const labels = Object.keys(results);
+    const data = Object.values(results);
 
-const labels = Object.keys(results);
-const data = Object.values(results);
-
-new Chart(document.getElementById('resultsChart'), {
-  type: 'radar',
-  data: {
-    labels,
-    datasets: [{
-      label: 'Ваш профиль PDQ-4',
-      data,
-      fill: true,
-      borderWidth: 2
-    }]
-  },
-  options: {
-    scales: {
-      r: {
-        angleLines: { color: '#ccc' },
-        grid: { color: '#ddd' },
-        suggestedMin: 0,
-        suggestedMax: 8
+    new Chart(document.getElementById('resultsChart'), {
+      type: 'radar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Ваш профиль PDQ-4',
+          data,
+          fill: true,
+          borderColor: '#007aff',
+          backgroundColor: 'rgba(0,122,255,0.1)',
+          pointBackgroundColor: '#007aff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            min: 0,
+            suggestedMax: 8,
+            ticks: { stepSize: 1, color: '#444' },
+            grid: { color: '#ddd' },
+            angleLines: { color: '#eee' }
+          }
+        },
+        plugins: { legend: { display: false } }
       }
-    },
-    plugins: { legend: { display: false } }
-  }
-});
-</script>
+    });
+  </script>
+</body>
+</html>
