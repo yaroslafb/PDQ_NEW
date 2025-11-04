@@ -1,7 +1,7 @@
 
 let scales = {};
 
-fetch('../data/scales.json')
+fetch('data/scales.json')
   .then(res => res.json())
   .then(data => { scales = data; })
   .catch(err => console.error('Ошибка загрузки scales.json:', err));
