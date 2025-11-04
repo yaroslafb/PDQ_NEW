@@ -24,7 +24,7 @@
     import questions from './data/questions.json' assert { type: 'json' };
     import { calculateResults } from './js/calculateResults.js';
 
-    // Загружаем данные пользователя (город, группа)
+    // Город и группа (если заданы)
     const city = localStorage.getItem('city') || '—';
     const group = localStorage.getItem('group') || '—';
     document.getElementById('cityGroup').innerText = `${city} — Группа ${group}`;
@@ -46,8 +46,8 @@
     function handleAnswer(isYes) {
       const q = questions[current];
       answers[q.id] = isYes;
-
       current++;
+
       if (current < questions.length) {
         showQuestion();
       } else {
