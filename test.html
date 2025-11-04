@@ -36,15 +36,11 @@
     const answers = {};
     let questions = [];
 
-    // Загружаем вопросы из JSON
-    fetch('./data/questions.json')
-      .then(res => {
-        if (!res.ok) throw new Error('Не удалось загрузить файл questions.json');
-        return res.json();
-      })
+    // ✅ Загружаем JSON через fetch (работает на GitHub Pages)
+    fetch('data/questions.json')
+      .then(res => res.json())
       .then(data => {
         questions = data;
-        if (!questions.length) throw new Error('Файл вопросов пуст.');
         showQuestion();
       })
       .catch(err => {
