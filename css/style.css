@@ -1,0 +1,109 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 40px 30px 60px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+#progress {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+#questionText {
+  font-size: 20px;
+  line-height: 1.4;
+  min-height: 80px;
+  margin-bottom: 40px;
+}
+
+.answers {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.answer-btn {
+  flex: 1;
+  font-size: 22px;
+  padding: 18px 0;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+
+.answer-btn.yes {
+  background: #007aff;
+}
+
+.answer-btn.no {
+  background: #aaa;
+}
+
+.answer-btn:active {
+  transform: scale(0.95);
+}
+
+.result-btn {
+  background: #007aff;
+  color: white;
+  font-size: 20px;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.result-btn:hover {
+  background: #005fcb;
+}
+
+.meta {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #666;
+}
+
+.input {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.button {
+  background: #007aff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background 0.2s ease;
+}
+
+.button:hover {
+  background: #005fcb;
+}
