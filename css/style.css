@@ -17,13 +17,13 @@ body {
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #progress {
   font-size: 16px;
   color: #555;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #questionText {
@@ -36,12 +36,12 @@ h1 {
 .answers {
   display: flex;
   justify-content: center;
-  gap: 30px;
+  gap: 40px;
 }
 
 .answer-btn {
   flex: 1;
-  font-size: 20px;
+  font-size: 22px;
   padding: 18px 0;
   border: none;
   border-radius: 12px;
