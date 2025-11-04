@@ -21,7 +21,6 @@
   </main>
 
   <script type="module">
-    import questions from './data/questions.json' assert { type: 'json' };
     import { calculateResults } from './js/calculateResults.js';
 
     const city = localStorage.getItem('city') || '—';
@@ -35,6 +34,23 @@
 
     let current = 0;
     const answers = {};
+    let questions = [];
+
+    // Загружаем вопросы из JSON
+    fetch('./data/questions.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Не удалось загрузить файл questions.json');
+        return res.json();
+      })
+      .then(data => {
+        questions = data;
+        if (!questions.length) throw new Error('Файл вопросов пуст.');
+        showQuestion();
+      })
+      .catch(err => {
+        questionText.textContent = 'Ошибка загрузки вопросов: ' + err.message;
+        document.querySelector('.answers').style.display = 'none';
+      });
 
     function showQuestion() {
       const q = questions[current];
@@ -65,8 +81,6 @@
 
     yesBtn.addEventListener('click', () => handleAnswer(true));
     noBtn.addEventListener('click', () => handleAnswer(false));
-
-    showQuestion();
   </script>
 </body>
 </html>
