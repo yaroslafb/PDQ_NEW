@@ -25,39 +25,59 @@
       window.location.href = 'index.html';
     }
 
-    const results = calculateResults(answers);
-    const labels = Object.keys(results);
-    const data = Object.values(results).map(r => r.score);
-    const colors = Object.values(results).map(r => r.color);
-    const thresholds = Object.values(results).map(r => r.threshold);
-    const maxThreshold = Math.max(...thresholds);
+    // Ждём, пока загрузится scales.json (через fetch внутри calculateResults.js)
+    async function waitForScalesAndRender() {
+      let results = {};
+      let tries = 0;
 
-    new Chart(document.getElementById('resultsChart'), {
-      type: 'radar',
-      data: {
-        labels,
-        datasets: [{
-          data,
-          backgroundColor: colors,
-          borderColor: '#444',
-          borderWidth: 2,
-          pointBackgroundColor: '#444'
-        }]
-      },
-      options: {
-        scales: {
-          r: {
-            min: 0,
-            max: maxThreshold,
-            ticks: { stepSize: 1, color: '#666' },
-            grid: { color: ctx => thresholds.includes(ctx.tick.value) ? '#ff0000' : '#ccc' },
-            angleLines: { color: '#ddd' },
-            pointLabels: { font: { size: 12 }, color: '#222' }
-          }
-        },
-        plugins: { legend: { display: false } }
+      // ждём максимум 2 секунды (10 × 200 мс)
+      while (tries < 10) {
+        results = calculateResults(answers);
+        if (Object.keys(results).length > 0) break;
+        await new Promise(r => setTimeout(r, 200));
+        tries++;
       }
-    });
+
+      if (Object.keys(results).length === 0) {
+        alert('Ошибка: шкалы не загружены.');
+        return;
+      }
+
+      const labels = Object.keys(results);
+      const data = Object.values(results).map(r => r.score);
+      const colors = Object.values(results).map(r => r.color);
+      const thresholds = Object.values(results).map(r => r.threshold);
+      const maxThreshold = Math.max(...thresholds);
+
+      new Chart(document.getElementById('resultsChart'), {
+        type: 'radar',
+        data: {
+          labels,
+          datasets: [{
+            data,
+            backgroundColor: colors,
+            borderColor: '#444',
+            borderWidth: 2,
+            pointBackgroundColor: '#444'
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              min: 0,
+              max: maxThreshold,
+              ticks: { stepSize: 1, color: '#666' },
+              grid: { color: ctx => thresholds.includes(ctx.tick.value) ? '#ff0000' : '#ccc' },
+              angleLines: { color: '#ddd' },
+              pointLabels: { font: { size: 12 }, color: '#222' }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    waitForScalesAndRender();
   </script>
 </body>
 </html>
