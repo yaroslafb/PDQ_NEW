@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Результаты PDQ-4</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -35,13 +35,15 @@
       type: 'radar',
       data: {
         labels,
-        datasets: [{
-          data,
-          backgroundColor: colors,
-          borderColor: '#444',
-          borderWidth: 2,
-          pointBackgroundColor: '#444'
-        }]
+        datasets: [
+          {
+            data,
+            backgroundColor: colors,
+            borderColor: '#444',
+            borderWidth: 2,
+            pointBackgroundColor: '#444',
+          },
+        ],
       },
       options: {
         scales: {
@@ -50,14 +52,15 @@
             max: maxThreshold,
             ticks: { stepSize: 1, color: '#666' },
             grid: {
-              color: ctx => thresholds.includes(ctx.tick.value) ? '#ff0000' : '#ccc'
+              color: (ctx) =>
+                thresholds.includes(ctx.tick.value) ? '#ff0000' : '#ccc',
             },
             angleLines: { color: '#ddd' },
-            pointLabels: { font: { size: 12 }, color: '#222' }
-          }
+            pointLabels: { font: { size: 12 }, color: '#222' },
+          },
         },
-        plugins: { legend: { display: false } }
-      }
+        plugins: { legend: { display: false } },
+      },
     });
   </script>
 </body>
