@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Результаты теста PDQ-4</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="container results">
+    <h1>Результаты теста PDQ-4</h1>
+    <p class="subtitle">Выраженность личностных черт</p>
+
+    <div class="grid">
+      <div class="col" id="col1"></div>
+      <div class="col" id="col2"></div>
+    </div>
+
+    <button class="button" style="margin-top: 20px;" onclick="window.location.href='index.html'">Пройти снова</button>
+  </main>
+
+  <script type="module">
+    import { calculateResults } from './js/calculateResults.mjs';
+
+    const column1 = [
+      "Параноидная ЧЛ",
+      "Шизоидная ЧЛ",
+      "Шизотипическая ЧЛ",
+      "Истерическая ЧЛ",
+      "Нарциссическая ЧЛ",
+      "Пограничная ЧЛ",
+      "Антисоциальная ЧЛ"
+    ];
+
+    const column2 = [
+      "Избегающая ЧЛ",
+      "Зависимая ЧЛ",
+      "Обсессивно-компульсивная ЧЛ",
+      "Депрессивная ЧЛ",
+      "Пассивно-агрессивная ЧЛ"
+    ];
+
+    const answers = JSON.parse(localStorage.getItem("pdqAnswers")) || [];
+
+    calculateResults(answers).then(results => {
+      const col1 = document.getElementById("col1");
+      const col2 = document.getElementById("col2");
+
+      const render = (container, scales) => {
+        scales.forEach(name => {
+          const data = results[name.replace(" ЧЛ", "")];
+          if (!data) return;
+
+          const { score, threshold } = data;
+          let color = "var(--green)";
+          if (score >= threshold) color = "var(--red)";
+          else if (score >= threshold - 2) color = "var(--yellow)";
+
+          const item = document.createElement("div");
+          item.className = "item";
+          item.innerHTML = `
+            <div class="label">${name}</div>
+            <div class="bar" style="--th:${threshold}">
+              <div class="fill" style="width:${(score / threshold) * 100}%; background:${color};"></div>
+              <div class="value">${score} / ${threshold}</div>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      };
+
+      render(col1, column1);
+      render(col2, column2);
+    });
+  </script>
+</body>
+</html>
