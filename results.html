@@ -5,76 +5,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Результаты теста PDQ-4</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #fafafa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5em;
+    }
+    main.container.results {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .item {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      padding: 12px 16px;
+    }
+    .label {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .bar {
+      position: relative;
+      height: 20px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .bar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(var(--th) * (100% / var(--th)) / var(--th)); /* placeholder */
+    }
+    .fill {
+      height: 100%;
+      border-radius: 10px 0 0 10px;
+      transition: width 0.5s ease;
+    }
+    .value {
+      text-align: right;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      color: #555;
+    }
+    :root {
+      --green: #8bc34a;
+      --yellow: #ffeb3b;
+      --red: #f44336;
+    }
+  </style>
 </head>
 <body>
-  <main class="container results">
+  <header>
     <h1>Результаты теста PDQ-4</h1>
-    <p class="subtitle">Выраженность личностных черт</p>
+  </header>
 
+  <main class="container results">
     <div class="grid">
-      <div class="col" id="col1"></div>
-      <div class="col" id="col2"></div>
+      <div class="col" id="col-left"></div>
+      <div class="col" id="col-right"></div>
     </div>
-
-    <button class="button" style="margin-top: 20px;" onclick="window.location.href='index.html'">Пройти снова</button>
   </main>
 
   <script type="module">
-  import { calculateResults } from "./js/calculateResults.mjs";
+    import { calculateResults } from "./js/calculateResults.mjs";
 
-  const answers = JSON.parse(localStorage.getItem("pdqAnswers")) || [];
+    const answers = JSON.parse(localStorage.getItem("pdqAnswers")) || [];
 
-  const LEFT_ORDER = [
-    "Параноидальное", "Шизоидное", "Шизотипическое",
-    "Истерическое", "Нарциссическое", "Пограничное", "Антисоциальное"
-  ];
-  const RIGHT_ORDER = [
-    "Избегающее", "Зависимое",
-    "Обсессивно-компульсивное", "Депрессивное", "Пассивно-агрессивное"
-  ];
+    const LEFT_ORDER = [
+      "Параноидальное", "Шизоидное", "Шизотипическое",
+      "Истерическое", "Нарциссическое", "Пограничное", "Антисоциальное"
+    ];
+    const RIGHT_ORDER = [
+      "Избегающее", "Зависимое",
+      "Обсессивно-компульсивное", "Депрессивное", "Пассивно-агрессивное"
+    ];
 
-  const LABEL_MAP = {
-    "Параноидальное": "Параноидная ЧЛ",
-    "Шизоидное": "Шизоидная ЧЛ",
-    "Шизотипическое": "Шизотипическая ЧЛ",
-    "Истерическое": "Истерическая ЧЛ",
-    "Нарциссическое": "Нарциссическая ЧЛ",
-    "Пограничное": "Пограничная ЧЛ",
-    "Антисоциальное": "Антисоциальная ЧЛ",
-    "Избегающее": "Избегающая ЧЛ",
-    "Зависимое": "Зависимая ЧЛ",
-    "Обсессивно-компульсивное": "Обсессивно-компульсивная ЧЛ",
-    "Депрессивное": "Депрессивная ЧЛ",
-    "Пассивно-агрессивное": "Пассивно-агрессивная ЧЛ"
-  };
+    const LABEL_MAP = {
+      "Параноидальное": "Параноидная ЧЛ",
+      "Шизоидное": "Шизоидная ЧЛ",
+      "Шизотипическое": "Шизотипическая ЧЛ",
+      "Истерическое": "Истерическая ЧЛ",
+      "Нарциссическое": "Нарциссическая ЧЛ",
+      "Пограничное": "Пограничная ЧЛ",
+      "Антисоциальное": "Антисоциальная ЧЛ",
+      "Избегающее": "Избегающая ЧЛ",
+      "Зависимое": "Зависимая ЧЛ",
+      "Обсессивно-компульсивное": "Обсессивно-компульсивная ЧЛ",
+      "Депрессивное": "Депрессивная ЧЛ",
+      "Пассивно-агрессивное": "Пассивно-агрессивная ЧЛ"
+    };
 
-  function color(score, th) {
-    if (score >= th) return "var(--red)";
-    if (score >= th - 2) return "var(--yellow)";
-    return "var(--green)";
-  }
-
-  (async () => {
-    const res = await calculateResults(answers);
-    const left = document.getElementById("col-left");
-    const right = document.getElementById("col-right");
-
-    function row(k) {
-      const r = res[k];
-      if (!r) return "";
-      const w = Math.max(0, Math.min(100, (r.score / r.threshold) * 100));
-      const c = color(r.score, r.threshold);
-      return `
-        <div class="item">
-          <div class="label">${LABEL_MAP[k] || k}</div>
-          <div class="bar" style="--th:${r.threshold};">
-            <div class="fill" style="width:${w}%; background:${c};"></div>
-            <div class="value">${r.score} / ${r.threshold}</div>
-          </div>
-        </div>`;
+    function color(score, th) {
+      if (score >= th) return "var(--red)";
+      if (score >= th - 2) return "var(--yellow)";
+      return "var(--green)";
     }
 
-    left.innerHTML = LEFT_ORDER.map(row).join("");
-    right.innerHTML = RIGHT_ORDER.map(row).join("");
-  })();
-</script>
+    (async () => {
+      const res = await calculateResults(answers);
+      console.log("Результаты:", res);
+
+      const left = document.getElementById("col-left");
+      const right = document.getElementById("col-right");
+
+      function row(k) {
+        const r = res[k];
+        if (!r) return "";
+        const w = Math.max(0, Math.min(100, (r.score / r.threshold) * 100));
+        const c = color(r.score, r.threshold);
+        return `
+          <div class="item">
+            <div class="label">${LABEL_MAP[k] || k}</div>
+            <div class="bar" style="--th:${r.threshold};">
+              <div class="fill" style="width:${w}%; background:${c};"></div>
+              <div class="value">${r.score} / ${r.threshold}</div>
+            </div>
+          </div>`;
+      }
+
+      left.innerHTML = LEFT_ORDER.map(row).join("");
+      right.innerHTML = RIGHT_ORDER.map(row).join("");
+    })();
+  </script>
+</body>
+</html>
