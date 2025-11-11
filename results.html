@@ -20,58 +20,61 @@
   </main>
 
   <script type="module">
-    import { calculateResults } from './js/calculateResults.mjs';
+  import { calculateResults } from "./js/calculateResults.mjs";
 
-    const column1 = [
-      "Параноидная ЧЛ",
-      "Шизоидная ЧЛ",
-      "Шизотипическая ЧЛ",
-      "Истерическая ЧЛ",
-      "Нарциссическая ЧЛ",
-      "Пограничная ЧЛ",
-      "Антисоциальная ЧЛ"
-    ];
+  const answers = JSON.parse(localStorage.getItem("pdqAnswers")) || [];
 
-    const column2 = [
-      "Избегающая ЧЛ",
-      "Зависимая ЧЛ",
-      "Обсессивно-компульсивная ЧЛ",
-      "Депрессивная ЧЛ",
-      "Пассивно-агрессивная ЧЛ"
-    ];
+  const LEFT_ORDER = [
+    "Параноидальное", "Шизоидное", "Шизотипическое",
+    "Истерическое", "Нарциссическое", "Пограничное", "Антисоциальное"
+  ];
+  const RIGHT_ORDER = [
+    "Избегающее", "Зависимое",
+    "Обсессивно-компульсивное", "Депрессивное", "Пассивно-агрессивное"
+  ];
 
-    const answers = JSON.parse(localStorage.getItem("pdqAnswers")) || [];
+  const LABEL_MAP = {
+    "Параноидальное": "Параноидная ЧЛ",
+    "Шизоидное": "Шизоидная ЧЛ",
+    "Шизотипическое": "Шизотипическая ЧЛ",
+    "Истерическое": "Истерическая ЧЛ",
+    "Нарциссическое": "Нарциссическая ЧЛ",
+    "Пограничное": "Пограничная ЧЛ",
+    "Антисоциальное": "Антисоциальная ЧЛ",
+    "Избегающее": "Избегающая ЧЛ",
+    "Зависимое": "Зависимая ЧЛ",
+    "Обсессивно-компульсивное": "Обсессивно-компульсивная ЧЛ",
+    "Депрессивное": "Депрессивная ЧЛ",
+    "Пассивно-агрессивное": "Пассивно-агрессивная ЧЛ"
+  };
 
-    calculateResults(answers).then(results => {
-      const col1 = document.getElementById("col1");
-      const col2 = document.getElementById("col2");
+  function color(score, th) {
+    if (score >= th) return "var(--red)";
+    if (score >= th - 2) return "var(--yellow)";
+    return "var(--green)";
+  }
 
-      const render = (container, scales) => {
-        scales.forEach(name => {
-          const data = results[name.replace(" ЧЛ", "")];
-          if (!data) return;
+  (async () => {
+    const res = await calculateResults(answers);
+    const left = document.getElementById("col-left");
+    const right = document.getElementById("col-right");
 
-          const { score, threshold } = data;
-          let color = "var(--green)";
-          if (score >= threshold) color = "var(--red)";
-          else if (score >= threshold - 2) color = "var(--yellow)";
+    function row(k) {
+      const r = res[k];
+      if (!r) return "";
+      const w = Math.max(0, Math.min(100, (r.score / r.threshold) * 100));
+      const c = color(r.score, r.threshold);
+      return `
+        <div class="item">
+          <div class="label">${LABEL_MAP[k] || k}</div>
+          <div class="bar" style="--th:${r.threshold};">
+            <div class="fill" style="width:${w}%; background:${c};"></div>
+            <div class="value">${r.score} / ${r.threshold}</div>
+          </div>
+        </div>`;
+    }
 
-          const item = document.createElement("div");
-          item.className = "item";
-          item.innerHTML = `
-            <div class="label">${name}</div>
-            <div class="bar" style="--th:${threshold}">
-              <div class="fill" style="width:${(score / threshold) * 100}%; background:${color};"></div>
-              <div class="value">${score} / ${threshold}</div>
-            </div>
-          `;
-          container.appendChild(item);
-        });
-      };
-
-      render(col1, column1);
-      render(col2, column2);
-    });
-  </script>
-</body>
-</html>
+    left.innerHTML = LEFT_ORDER.map(row).join("");
+    right.innerHTML = RIGHT_ORDER.map(row).join("");
+  })();
+</script>
